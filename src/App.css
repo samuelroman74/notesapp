@@ -5,6 +5,16 @@
   text-align: center;
 }
 
+.note-description { color: #333; /* Dark text color for better visibility */ 
+  background-color: #fff; /* Ensure background is white */ 
+  padding: 1rem; /* Optional: Add some padding for better readability */
+}
+
+.notes-grid { display: grid; 
+  grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); 
+  gap: 2rem; /* Spacing between notes */ 
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

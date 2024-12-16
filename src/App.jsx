@@ -13,13 +13,10 @@ import {
 } from "@aws-amplify/ui-react";
 import { Amplify } from "aws-amplify";
 import "@aws-amplify/ui-react/styles.css";
-import { getUrl } from "aws-amplify/storage";
-import { uploadData } from "aws-amplify/storage";
+import { getUrl, uploadData } from "aws-amplify/storage";
 import { generateClient } from "aws-amplify/data";
 import outputs from "../amplify_outputs.json";
-/**
- * @type {import('aws-amplify/data').Client<import('../amplify/data/resource').Schema>}
- */
+import './App.css';
 
 Amplify.configure(outputs);
 const client = generateClient({
@@ -41,51 +38,70 @@ export default function App() {
           const linkToStorageFile = await getUrl({
             path: ({ identityId }) => `media/${identityId}/${note.image}`,
           });
-          console.log(linkToStorageFile.url);
           note.image = linkToStorageFile.url;
         }
         return note;
       })
     );
-    console.log(notes);
     setNotes(notes);
+  }
+
+  async function fetchAllNotes() {
+    const { data: notes } = await client.models.Note.list();
+    return notes;
   }
 
   async function createNote(event) {
     event.preventDefault();
     const form = new FormData(event.target);
-    console.log(form.get("image").name);
+
+    const descriptionText = form.get("description");
+    const allNotes = await fetchAllNotes(); // Fetch all notes to find their names
+
+    // Process the description to convert note names to clickable links
+    const processedDescription = descriptionText.replace(/(\b\w+\b)/g, (match) => {
+      const note = allNotes.find((note) => note.name === match);
+      if (note) {
+        return `<span class="note-link" data-note-id="${note.id}">${match}</span>`;
+      }
+      return match;
+    });
 
     const { data: newNote } = await client.models.Note.create({
       name: form.get("name"),
-      description: form.get("description"),
+      description: processedDescription, // Save the processed description
       image: form.get("image").name,
     });
 
-    console.log(newNote);
-    if (newNote.image)
-      if (newNote.image)
-        await uploadData({
-          path: ({ identityId }) => `media/${identityId}/${newNote.image}`,
-
-          data: form.get("image"),
-        }).result;
+    if (newNote.image) {
+      await uploadData({
+        path: ({ identityId }) => `media/${identityId}/${newNote.image}`,
+        data: form.get("image"),
+      }).result;
+    }
 
     fetchNotes();
     event.target.reset();
   }
 
   async function deleteNote({ id }) {
-    const toBeDeletedNote = {
-      id: id,
-    };
-
-    const { data: deletedNote } = await client.models.Note.delete(
-      toBeDeletedNote
-    );
-    console.log(deletedNote);
-
+    const { data: deletedNote } = await client.models.Note.delete({ id });
     fetchNotes();
+  }
+
+  function handleNoteClick(event) {
+    if (event.target.classList.contains('note-link')) {
+      const noteId = event.target.dataset.noteId;
+      const note = notes.find(note => note.id === noteId);
+      if (note) {
+        viewNoteDetails(note);
+      }
+    }
+  }
+
+  function viewNoteDetails(note) {
+    // Display note details in a modal or any suitable component
+    console.log(note); // For now, log the note details
   }
 
   return (
@@ -111,23 +127,19 @@ export default function App() {
                 name="name"
                 placeholder="Note Name"
                 label="Note Name"
-                labelHidden
-                variation="quiet"
                 required
               />
               <TextField
                 name="description"
                 placeholder="Note Description"
                 label="Note Description"
-                labelHidden
-                variation="quiet"
                 required
               />
               <View
                 name="image"
                 as="input"
                 type="file"
-                alignSelf={"end"}
+                alignSelf="end"
                 accept="image/png, image/jpeg"
               />
 
@@ -138,45 +150,25 @@ export default function App() {
           </View>
           <Divider />
           <Heading level={2}>Current Notes</Heading>
-          <Grid
-            margin="3rem 0"
-            autoFlow="column"
-            justifyContent="center"
-            gap="2rem"
-            alignContent="center"
-          >
-            {notes.map((note) => (
-              <Flex
-                key={note.id || note.name}
-                direction="column"
-                justifyContent="center"
-                alignItems="center"
-                gap="2rem"
-                border="1px solid #ccc"
-                padding="2rem"
-                borderRadius="5%"
-                className="box"
-              >
-                <View>
-                  <Heading level="3">{note.name}</Heading>
-                </View>
-                <Text fontStyle="italic">{note.description}</Text>
-                {note.image && (
-                  <Image
-                    src={note.image}
-                    alt={`visual aid for ${notes.name}`}
-                    style={{ width: 400 }}
-                  />
-                )}
-                <Button
-                  variation="destructive"
-                  onClick={() => deleteNote(note)}
-                >
-                  Delete note
-                </Button>
-              </Flex>
-            ))}
-          </Grid>
+          <Grid className="notes-grid" onClick={handleNoteClick}>
+  {notes.map((note) => (
+    <Flex key={note.id || note.name} direction="column" justifyContent="center" alignItems="center" gap="2rem" border="1px solid #ccc" padding="2rem" borderRadius="5%" className="box">
+      <View>
+        <Heading level="3">{note.name}</Heading>
+      </View>
+      <div className="note-description" dangerouslySetInnerHTML={{ __html: note.description }} />
+      {note.image && (
+        <Image
+          src={note.image}
+          alt={`visual aid for ${note.name}`}
+          style={{ width: 400 }}
+        />
+      )}
+      <Button variation="destructive" onClick={() => deleteNote(note)}>Delete Note</Button>
+    </Flex>
+  ))}
+</Grid>
+
           <Button onClick={signOut}>Sign Out</Button>
         </Flex>
       )}

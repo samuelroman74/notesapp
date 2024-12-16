@@ -13,6 +13,7 @@ const schema = a.schema({
       name:a.string(),
       description: a.string(),
       image: a.string(),
+      references: a.string().array(),
     })
     .authorization((allow) => [allow.owner()]),
 });
