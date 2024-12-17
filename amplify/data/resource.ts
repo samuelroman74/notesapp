@@ -11,9 +11,11 @@ const schema = a.schema({
   Note: a
     .model({
       name:a.string(),
+      parent: a.string(),
+      cases: a.string().array(),
+      existence: a.boolean(),
       description: a.string(),
       image: a.string(),
-      references: a.string().array(),
     })
     .authorization((allow) => [allow.owner()]),
 });

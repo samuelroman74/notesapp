@@ -1,0 +1,46 @@
+/* src/components/Note.css */
+.note {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1rem;
+    margin: 1rem 0;
+    width: 100%;
+    height: 200px;
+  }
+  
+  .note-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    color: black;
+    background-color: #f0f0f0;
+    padding: 0.5rem;
+    border-radius: 5px;
+  }
+  
+  .toggle-button {
+    background: none;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+  
+  .note-description {
+    margin-top: 0.5rem;
+    padding: 1rem;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .delete-button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 1rem;
+  }
+  

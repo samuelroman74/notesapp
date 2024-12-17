@@ -1,0 +1,83 @@
+#root {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+  }
+  
+  /* src/App.css or src/components/NoteLinks.css */
+.note-link {
+    color: blue; /* Default link color */
+    cursor: pointer; /* Change cursor to pointer */
+    text-decoration: underline; /* Underline to indicate a link */
+  }
+  
+  .note-link:hover {
+    color: darkblue; /* Highlight color on hover */
+    background-color: #e0e0e0; /* Light background to indicate hover */
+    cursor: pointer; /* Ensures cursor remains a pointer on hover */
+    text-decoration: none; /* Remove underline on hover for emphasis */
+  }
+  
+
+  .note-description { color: #333; /* Dark text color for better visibility */ 
+    background-color: #fff; /* Ensure background is white */ 
+  }
+  
+  .note-parent { color: #333; /* Dark text color for better visibility */ 
+    background-color: #fff; /* Ensure background is white */ 
+  }
+  
+/* App.css or your relevant CSS file */
+.notes-grid {
+    display: flex;
+    direction: column;
+    align-items: center; 
+    gap: 2rem;
+    padding: 2rem;
+    margin: 20px;  
+    /* Allows wrapping to the next line if items overflow */ /* Optional: spacing between items */
+  }
+  
+  .note {
+    flex: 1 1 calc(33.333% - 1rem); /* Adjusts to 3 items per row, accounting for gap */
+    box-sizing: border-box; /* Ensures padding and border are included in the width calculation */
+  }
+  
+  
+  .logo {
+    height: 6em;
+    padding: 1.5em;
+    will-change: filter;
+    transition: filter 300ms;
+  }
+  .logo:hover {
+    filter: drop-shadow(0 0 2em #646cffaa);
+  }
+  .logo.react:hover {
+    filter: drop-shadow(0 0 2em #61dafbaa);
+  }
+  
+  @keyframes logo-spin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  @media (prefers-reduced-motion: no-preference) {
+    a:nth-of-type(2) .logo {
+      animation: logo-spin infinite 20s linear;
+    }
+  }
+  
+  .card {
+    padding: 2em;
+  }
+  
+  .read-the-docs {
+    color: #888;
+  }
+  

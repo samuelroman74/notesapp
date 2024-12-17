@@ -1,0 +1,26 @@
+/* src/components/Taskbar.css */
+.taskbar {
+    display: flex;
+    background-color: #333;
+    padding: 10px;
+    align-self: auto;
+    top: 0;
+    width: 100%;
+    justify-content:center;
+    z-index: 1000; /* Ensure it stays on top */
+  }
+  
+  .taskbar-item {
+    background-color: #444;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin-left: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .taskbar-item:hover {
+    background-color: #555;
+  }
+  
